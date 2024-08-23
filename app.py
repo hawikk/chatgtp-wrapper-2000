@@ -3,7 +3,6 @@ import os
 import time
 from datetime import datetime, timedelta
 
-import openai
 import requests
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request
@@ -28,7 +27,7 @@ def fetch_relevant_news(ticker):
         response = requests.get(url)
         response.raise_for_status()
         news_data = response.json()
-        return news_data[:20]
+        return news_data[:1]
     except requests.exceptions.RequestException as e:
         print(f"Error fetching news: {e}")
         return []
@@ -49,7 +48,7 @@ def summarize_key_points(articles, ticker):
     ]
     try:
         response = client.chat.completions.create(
-            model='gpt-4',
+            model='gpt-4o-mini',
             messages=messages,
             max_tokens=750
         )
