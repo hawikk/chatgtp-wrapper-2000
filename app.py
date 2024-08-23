@@ -1,12 +1,13 @@
-from flask import Flask, jsonify, request
-from flask_cors import CORS  # Import CORS
+import json
+import os
+import time
+from datetime import datetime, timedelta
 
 import openai
-from dotenv import load_dotenv
-import os
-import json
-import time
 import requests
+from dotenv import load_dotenv
+from flask import Flask, jsonify, request
+from flask_cors import CORS  # Import CORS
 
 # Load environment variables
 load_dotenv()
@@ -17,10 +18,11 @@ app = Flask(__name__)
 # Configure CORS
 CORS(app, resources={r"/*": {"origins": "*"}})  # Allow all origins (for development purposes)
 
+
 # Function to fetch relevant news
 def fetch_relevant_news(ticker):
     FINNHUB_API_KEY = os.getenv('FINNHUB_API_KEY')
-    url = f'https://finnhub.io/api/v1/company-news?symbol={ticker}&from=2024-08-22&to=2024-08-23&token={FINNHUB_API_KEY}'
+    url = f'https://finnhub.io/api/v1/company-news?symbol={ticker}&from={(datetime.now() - timedelta(1)).strftime("%Y-%m-%d")}&to={time.strftime("%Y-%m-%d")}&token={FINNHUB_API_KEY}'
     try:
         response = requests.get(url)
         response.raise_for_status()
@@ -30,6 +32,7 @@ def fetch_relevant_news(ticker):
         print(f"Error fetching news: {e}")
         return []
 
+
 # Function to summarize key points
 def summarize_key_points(articles, ticker):
     OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
@@ -38,8 +41,10 @@ def summarize_key_points(articles, ticker):
     for article in articles:
         articles_text += f"Headline: {article['headline']}\nSummary: {article['summary']}\n\n"
     messages = [
-        {"role": "system", "content": "You are a senior financial advisor that summarizes weekly fundamentals analysis notes in weekly news articles for clients."},
-        {"role": "user", "content": f"These are the latest market news about {ticker}. Carefully analyze the information and provide the 5 most important notes about the ticker:\n\n{articles_text}"}
+        {"role": "system",
+         "content": "You are a senior financial advisor that summarizes weekly fundamentals analysis notes in weekly news articles for clients."},
+        {"role": "user",
+         "content": f"These are the latest market news about {ticker}. Carefully analyze the information and provide the 5 most important notes about the ticker:\n\n{articles_text}"}
     ]
     try:
         response = openai.ChatCompletion.create(
@@ -52,6 +57,7 @@ def summarize_key_points(articles, ticker):
         print(f"Error summarizing key points: {e}")
         return str(e)
 
+
 # Flask route
 @app.route('/get-summary', methods=['GET'])
 def get_summary():
@@ -60,6 +66,7 @@ def get_summary():
         return jsonify({"error": "No ticker provided"}), 400
     summary = get_summarized_news(ticker)
     return jsonify({"summary": summary})
+
 
 # Function to get summarized news
 def get_summarized_news(ticker):
@@ -75,6 +82,7 @@ def get_summarized_news(ticker):
     with open(log_filename, 'w') as log_file:
         json.dump(response, log_file, indent=4)
     return key_points_summary
+
 
 if __name__ == '__main__':
     app.run(debug=True)
