@@ -16,7 +16,14 @@ async function getStockSummary() {
         }
 
         const data = await response.json();
-        summaryDiv.innerHTML = `<h2>Summary for ${ticker}:</h2><p>${data.summary}</p>`;
+
+        // Replace newlines with <br> tags and render markdown
+        const formattedSummary = data.summary
+            .replace(/\n/g, '<br>')
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')  // Replace **bold** with <strong>bold</strong>
+            .replace(/\*(.*?)\*/g, '<em>$1</em>');  // Replace *italic* with <em>italic</em>
+
+        summaryDiv.innerHTML = `<h2>Summary for ${ticker}:</h2><p>${formattedSummary}</p>`;
     } catch (error) {
         console.error("Fetch error:", error);
         summaryDiv.innerHTML = "<p class='error'>Failed to fetch the summary. Please try again later.</p>";
