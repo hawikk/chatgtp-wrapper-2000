@@ -6,7 +6,8 @@ from datetime import datetime, timedelta
 import requests
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request
-from flask_cors import CORS  # Import CORS
+from flask_cors import CORS
+from flask_caching import Cache
 from openai import OpenAI
 
 # Load environment variables
@@ -16,7 +17,10 @@ load_dotenv()
 app = Flask(__name__)
 
 # Configure CORS
-CORS(app, resources={r"/*": {"origins": "*"}})  # Allow all origins (for development purposes)
+CORS(app, resources={r"/*": {"origins": "*"}})
+
+# Initialize cache
+cache = Cache(app, config={'CACHE_TYPE': 'simple'})  # Using in-memory cache
 
 
 # Function to fetch relevant news
@@ -58,16 +62,6 @@ def summarize_key_points(articles, ticker):
         return str(e)
 
 
-# Flask route
-@app.route('/get-summary', methods=['GET'])
-def get_summary():
-    ticker = request.args.get('ticker')
-    if not ticker:
-        return jsonify({"error": "No ticker provided"}), 400
-    summary = get_summarized_news(ticker)
-    return jsonify({"summary": summary})
-
-
 # Function to get summarized news
 def get_summarized_news(ticker):
     news_articles = fetch_relevant_news(ticker)
@@ -82,6 +76,17 @@ def get_summarized_news(ticker):
     with open(log_filename, 'w') as log_file:
         json.dump(response.to_dict(), log_file, indent=4)
     return key_points_summary
+
+
+# Flask route with caching
+@app.route('/get-summary', methods=['GET'])
+@cache.cached(timeout=900, query_string=True)  # Cache this route for 5 minutes
+def get_summary():
+    ticker = request.args.get('ticker')
+    if not ticker:
+        return jsonify({"error": "No ticker provided"}), 400
+    summary = get_summarized_news(ticker)
+    return jsonify({"summary": summary})
 
 
 if __name__ == '__main__':
