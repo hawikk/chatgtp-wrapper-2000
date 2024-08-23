@@ -8,6 +8,7 @@ import requests
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request
 from flask_cors import CORS  # Import CORS
+from openai import OpenAI
 
 # Load environment variables
 load_dotenv()
@@ -36,7 +37,7 @@ def fetch_relevant_news(ticker):
 # Function to summarize key points
 def summarize_key_points(articles, ticker):
     OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
-    openai.api_key = OPENAI_API_KEY
+    client = OpenAI(api_key=OPENAI_API_KEY)
     articles_text = ""
     for article in articles:
         articles_text += f"Headline: {article['headline']}\nSummary: {article['summary']}\n\n"
@@ -47,7 +48,7 @@ def summarize_key_points(articles, ticker):
          "content": f"These are the latest market news about {ticker}. Carefully analyze the information and provide the 5 most important notes about the ticker:\n\n{articles_text}"}
     ]
     try:
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
             model='gpt-4',
             messages=messages,
             max_tokens=750
@@ -76,11 +77,11 @@ def get_summarized_news(ticker):
     response = summarize_key_points(news_articles, ticker)
     if isinstance(response, str):
         return response
-    key_points_summary = response['choices'][0]['message']['content'].strip()
+    key_points_summary = response.choices[0].message.content.strip()
     timestamp = time.strftime("%Y%m%d-%H%M%S")
     log_filename = f"openai_response_{timestamp}.json"
     with open(log_filename, 'w') as log_file:
-        json.dump(response, log_file, indent=4)
+        json.dump(response.to_dict(), log_file, indent=4)
     return key_points_summary
 
 
