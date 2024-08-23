@@ -1,1 +1,1 @@
-# project-fintech-ai
+# chatgpt-wrapper-2000
