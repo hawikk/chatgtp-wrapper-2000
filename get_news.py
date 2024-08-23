@@ -41,9 +41,9 @@ def summarize_key_points(articles, ticker):
         articles_text += f"Headline: {article['headline']}\nSummary: {article['summary']}\n\n"
 
     messages = [
-        {"role": "system", "content": "You are a senior financial advisor that summarizes daily fundamentals analysis notes in daily news articles for clients."},
+        {"role": "system", "content": "You are a senior financial advisor that summarizes weekly fundamentals analysis notes in weekly news articles for clients."},
         {"role": "user",
-         "content": f"These are the latest market news about {ticker}. Take into account the company for your analysis. Carefully analyze the information and provide the 5 most important notes about the ticker for today:\n\n{articles_text}"}
+         "content": f"These are the latest market news about {ticker}. Take into account the company for your analysis. Carefully analyze the information and provide the 5 most important notes about the ticker for the last:\n\n{articles_text}"}
     ]
 
     try:

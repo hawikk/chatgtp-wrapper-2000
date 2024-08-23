@@ -1,0 +1,4 @@
+# .gitignore
+.env
+config.json
+config.yaml
