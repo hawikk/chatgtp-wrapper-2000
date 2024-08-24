@@ -98,13 +98,10 @@ def get_summarized_news(ticker):
     if not news_articles:
         return "No news articles found."
 
-    response = summarize_key_points(news_articles, ticker)
-    if isinstance(response, str):
-        return response
+    openai_response = summarize_key_points(news_articles, ticker)
+    news_summary = openai_response.choices[0].message.content.strip()
 
-    key_points_summary = response.choices[0].message.content.strip()
-
-    return key_points_summary
+    return news_summary
 
 
 # Flask route with caching and logging
