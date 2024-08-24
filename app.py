@@ -35,6 +35,115 @@ logger.addHandler(file_handler)
 logger.info("Flask application starting up...")
 
 
+class FinancialData:
+    def __init__(self, ticker):
+        self.ticker = ticker
+        self.api_key = os.getenv('FINNHUB_API_KEY')
+
+        # Initialize variables to store financial data
+        self.company_name = None
+        self.market_cap = None
+        self.pe_ratio = None
+        self.eps = None
+        self.revenue = None
+        self.revenue_growth = None
+        self.net_income = None
+        self.net_income_margin = None
+        self.dividend_yield = None
+        self.debt_to_equity_ratio = None
+        self.roe = None
+        self.current_ratio = None
+        self.free_cash_flow = None
+        self.pb_ratio = None
+        self.roa = None
+        self.operating_margin = None
+        self.beta = None
+        self.interest_coverage_ratio = None
+
+        # Fetch data during initialization
+        self.fetch_company_profile()
+        self.fetch_basic_financials()
+        self.fetch_financials()
+
+    def fetch_company_profile(self):
+        """Fetch company profile data that includes market cap, beta, and other data."""
+        url = f'https://finnhub.io/api/v1/stock/profile2?symbol={self.ticker}&token={self.api_key}'
+        response = requests.get(url)
+        if response.status_code == 200:
+            data = response.json()
+            self.company_name = data.get('name')
+            self.market_cap = data.get('marketCapitalization')
+        else:
+            print(f"Error fetching company profile for {self.ticker}: {response.status_code}")
+
+    def fetch_basic_financials(self):
+        """Fetch basic financials like P/E ratio, dividend yield, and more."""
+        url = f'https://finnhub.io/api/v1/stock/metric?symbol={self.ticker}&metric=all&token={self.api_key}'
+        response = requests.get(url)
+        if response.status_code == 200:
+            data = response.json().get('metric', {})
+
+            # Extracting the correct metrics from the data
+            self.beta = data.get('beta')
+            self.pe_ratio = data.get('peTTM')  # P/E Ratio (Trailing Twelve Months)
+            self.pb_ratio = data.get('pbAnnual')  # Price-to-Book Ratio (Annual)
+            self.current_ratio = data.get('currentRatioAnnual')  # Current Ratio (Annual)
+            self.debt_to_equity_ratio = data.get('totalDebt/totalEquityAnnual')  # Debt-to-Equity Ratio (Annual)
+            self.free_cash_flow = data.get('freeCashFlowTTM')  # Free Cash Flow (TTM)
+            self.interest_coverage_ratio = data.get('netInterestCoverageTTM')  # Interest Coverage Ratio (TTM)
+            self.net_income = data.get('netIncomeEmployeeTTM')  # Net Income per Employee (TTM)
+            self.net_income_margin = data.get('netProfitMarginTTM')  # Net Profit Margin (TTM)
+            self.revenue = data.get('revenuePerShareTTM')  # Revenue Per Share (TTM)
+            self.revenue_growth = data.get('revenueGrowthTTMYoy')  # Revenue Growth (TTM YoY)
+
+        else:
+            print(f"Error fetching basic financials for {self.ticker}: {response.status_code}")
+
+    def fetch_financials(self):
+        """Fetch detailed financials including revenue, net income, and growth rates."""
+        url = f'https://finnhub.io/api/v1/stock/financials-reported?symbol={self.ticker}&token={self.api_key}'
+        response = requests.get(url)
+        if response.status_code == 200:
+            data = response.json().get('data', [])
+            if data:
+                latest_report = data[0].get('report', {})
+
+                # Handling income statement
+                income_statement = latest_report.get('ic', [])
+                if isinstance(income_statement, list):
+                    for item in income_statement:
+                        if item.get('concept') == 'totalRevenue':
+                            self.revenue = item.get('value')
+                        if item.get('concept') == 'netIncome':
+                            self.net_income = item.get('value')
+
+                # Calculate net income margin
+                if self.revenue and self.net_income:
+                    self.net_income_margin = (self.net_income / self.revenue) * 100
+
+                # Assume revenue growth is from the year-over-year percentage change
+                if len(data) > 1:  # If there's at least one previous report
+                    previous_income_statement = data[1].get('report', {}).get('ic', [])
+                    previous_revenue = None
+                    if isinstance(previous_income_statement, list):
+                        for item in previous_income_statement:
+                            if item.get('concept') == 'totalRevenue':
+                                previous_revenue = item.get('value')
+                                break
+
+                    if previous_revenue:
+                        self.revenue_growth = ((self.revenue - previous_revenue) / previous_revenue) * 100
+
+                # Handling balance sheet
+                balance_sheet = latest_report.get('bs', [])
+                if isinstance(balance_sheet, list):
+                    for item in balance_sheet:
+                        if item.get('concept') == 'currentRatio':
+                            self.current_ratio = item.get('value')
+        else:
+            print(f"Error fetching financials for {self.ticker}: {response.status_code}")
+
+
 def log_function_call(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
