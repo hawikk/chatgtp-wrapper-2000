@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Stock Input</title>
+</head>
+<body>
+    <h1>Enter Stock Symbols</h1>
+    <form action="/submit" method="post">
+        <input type="text" name="symbols" placeholder="AAPL, GOOGL, MSFT" required>
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>

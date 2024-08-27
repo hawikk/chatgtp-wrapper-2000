@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Stock Results</title>
+</head>
+<body>
+    <h1>Stock Data</h1>
+    <div class="card-grid">
+        {% for symbol, data in stock_data.items() %}
+        <div class="card">
+            <div class="card-header">
+                <img src="{{ data['profile']['logo'] }}" alt="{{ symbol }} logo" style="width: 50px; height: 50px;">
+                <h2>
+                    {{ symbol }} 
+                    <span class="{{ 'positive' if data['quote']['c'] >= data['quote']['pc'] else 'negative' }}">
+                        ({{ '{:.2f}'.format(((data['quote']['c'] - data['quote']['pc']) / data['quote']['pc']) * 100) }}%)
+                    </span>
+                </h2>
+            </div>
+            <p>Current Price: ${{ data['quote']['c'] }}</p>
+            <p>Company Name: {{ data['profile']['name'] }}</p>
+            <p>P/E Ratio: {{ data['financials']['metric']['peRatio'] }}</p>
+            <!-- Add more fields as needed -->
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
