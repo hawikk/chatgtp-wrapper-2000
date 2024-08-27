@@ -30,8 +30,8 @@
                     <p>${{ data.financial_metrics['current_price'] }}</p>
                 </div>
                 <div class="metric">
-                    <p>Income Growth %:</p>
-                    <p>TODO }}%</p>
+                    <p>Income Growth %: (WRONG)</p>
+                    <p>{{ '{:.2f}'.format(data.financial_metrics['netIncomeGrowthQuarterly']) }}%</p>
                 </div>
                 <div class="metric">
                     <p>P/E Ratio:</p>
