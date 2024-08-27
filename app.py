@@ -21,9 +21,13 @@ class Symbol():
 
         # Refactor financial metrics into a dictionary
         self.financial_metrics = {
+            # Price Data
             'price_change_percentage' : data['quote']['dp'],
             'current_price' : data['quote']['c'],
             'market_cap': data['profile']['marketCapitalization'],
+            'previous_close' : data['quote']['pc'],
+
+            # Fundamentals
             'peBasicExclExtraTTM': data['financials'].get('metric', {}).get('peBasicExclExtraTTM'),
             'pbAnnual': data['financials'].get('metric', {}).get('pbAnnual'),
             'psAnnual': data['financials'].get('metric', {}).get('psAnnual'),
@@ -70,7 +74,7 @@ def index():
 @app.route('/submit', methods=['POST'])
 def submit():
     symbols = request.form['symbols'].split(',')
-    stock_data = {symbol: fetch_stock_data(symbol.strip()) for symbol in symbols}
+    stock_data = {symbol.strip(): Symbol(symbol.strip()) for symbol in symbols}  # Create Symbol objects
     return render_template('results.html', stock_data=stock_data)
 
 if __name__ == '__main__':

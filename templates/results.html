@@ -12,38 +12,38 @@
         {% for symbol, data in stock_data.items() %}
         <div class="card">
             <div class="card-header">
-                <img src="{{ data['profile']['logo'] }}" alt="{{ symbol }} logo" style="width: 50px; height: 50px;">
+                <img src="{{ data.logo }}" alt="{{ symbol }} logo" style="width: 50px; height: 50px;">
                 <h2>
                     {{ symbol }} 
-                    <span class="{{ 'positive' if data['quote']['c'] >= data['quote']['pc'] else 'negative' }}">
-                        ({{ '{:.2f}'.format(((data['quote']['c'] - data['quote']['pc']) / data['quote']['pc']) * 100) }}%)
+                    <span class="{{ 'positive' if data.financial_metrics['current_price'] >= data.financial_metrics['previous_close'] else 'negative' }}">
+                        ({{ '{:.2f}'.format(((data.financial_metrics['current_price'] - data.financial_metrics['previous_close']) / data.financial_metrics['previous_close']) * 100) }}%)
                     </span>
                 </h2>
             </div>
             <div class="metrics-grid">
                 <div class="metric">
                     <p>Market Cap:</p>
-                    <p>${{ '{:,.0f}'.format(data['financials']['metric']['marketCap']) }}</p>
+                    <p>${{ '{:,.0f}'.format(data.financial_metrics['marketCapitalization']) }}</p>
                 </div>
                 <div class="metric">
                     <p>Current Price:</p>
-                    <p>${{ data['quote']['c'] }}</p>
+                    <p>${{ data.financial_metrics['current_price'] }}</p>
                 </div>
                 <div class="metric">
                     <p>Income Growth %:</p>
-                    <p>{{ '{:.2f}'.format(data['financials']['metric']['incomeGrowth']) }}%</p>
+                    <p>TODO }}%</p>
                 </div>
                 <div class="metric">
-                    <p>Oscillator:</p>
-                    <p>{{ data['financials']['metric']['oscillator'] }}</p>
+                    <p>P/E Ratio:</p>
+                    <p>{{ data.financial_metrics['peBasicExclExtraTTM'] }}</p>
                 </div>
                 <div class="metric">
-                    <p>Moving Average:</p>
-                    <p>{{ data['financials']['metric']['movingAverage'] }}</p>
+                    <p>Technical Indicators:</p>
+                    <p>TODO</p>
                 </div>
                 <div class="metric">
                     <p>Financial Advisor Rating:</p>
-                    <p>{{ data['financials']['metric']['financialAdvisorRating'] }}</p>
+                    <p>TODO</p>
                 </div>
             </div>
         </div>
