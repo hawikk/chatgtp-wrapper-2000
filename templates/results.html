@@ -20,10 +20,32 @@
                     </span>
                 </h2>
             </div>
-            <p>Current Price: ${{ data['quote']['c'] }}</p>
-            <p>Company Name: {{ data['profile']['name'] }}</p>
-            <p>P/E Ratio: {{ data['financials']['metric']['peRatio'] }}</p>
-            <!-- Add more fields as needed -->
+            <div class="metrics-grid">
+                <div class="metric">
+                    <p>Market Cap:</p>
+                    <p>${{ '{:,.0f}'.format(data['financials']['metric']['marketCap']) }}</p>
+                </div>
+                <div class="metric">
+                    <p>Current Price:</p>
+                    <p>${{ data['quote']['c'] }}</p>
+                </div>
+                <div class="metric">
+                    <p>Income Growth %:</p>
+                    <p>{{ '{:.2f}'.format(data['financials']['metric']['incomeGrowth']) }}%</p>
+                </div>
+                <div class="metric">
+                    <p>Oscillator:</p>
+                    <p>{{ data['financials']['metric']['oscillator'] }}</p>
+                </div>
+                <div class="metric">
+                    <p>Moving Average:</p>
+                    <p>{{ data['financials']['metric']['movingAverage'] }}</p>
+                </div>
+                <div class="metric">
+                    <p>Financial Advisor Rating:</p>
+                    <p>{{ data['financials']['metric']['financialAdvisorRating'] }}</p>
+                </div>
+            </div>
         </div>
         {% endfor %}
     </div>
