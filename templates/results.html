@@ -39,7 +39,11 @@
                 </div>
                 <div class="metric">
                     <p>Technical Indicators:</p>
-                    <p>TODO</p>
+                    {% for symbol, chart in gauge_charts.items() %}
+                        <div id="gauge-{{ symbol }}" style="width: 100%; height: 300px;">
+                            {{ chart|safe }}
+                        </div>
+                    {% endfor %}
                 </div>
                 <div class="metric">
                     <p>Financial Advisor Rating:</p>
