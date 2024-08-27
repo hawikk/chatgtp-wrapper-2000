@@ -1,13 +1,13 @@
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #f4f4f4;
+    background-color: rgb(30, 33, 34);
     margin: 0;
     padding: 20px;
 }
 
 h1 {
     text-align: center;
-    color: #333;
+    color: #ffffff;
 }
 
 .card-grid {
@@ -64,16 +64,55 @@ input[type="text"] {
     margin-bottom: 10px;
 }
 
-button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+@property --rotate {
+    syntax: "<angle>";
+    inherits: false;
+    initial-value: 0deg;
 }
 
-button:hover {
-    background-color: #0056b3;
+button {
+    --blue: #0173ff;
+    --radius: 35px;
+    --rotate: 0deg;
+    padding: 20px 30px;
+    border-radius: var(--radius);
+    background: var(--blue);
+    color: white;
+    font-weight: 300;
+    font-size: 20px;
+    border: 0;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+button .fancy {
+    position: absolute;
+    inset: 0;
+}
+
+button .fancy::before {
+    content: '';
+    background: conic-gradient(from var(--rotate), transparent 0%, white 5%, transparent 10%);
+    position: absolute;
+    inset: 0;
+    animation: rotate 2s linear infinite;
+}
+
+button .fancy::after {
+    content: "";
+    position: absolute;
+    inset: 2px;
+    background: var(--blue);
+    border-radius: calc(var(--radius) - 2px);
+}
+
+button .text {
+    position: relative;
+}
+
+@keyframes rotate {
+    to {
+        --rotate: 360deg;
+    }
 }
