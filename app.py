@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request
+from flask_caching import Cache
 from openai import OpenAI
 from dotenv import load_dotenv
 
@@ -12,6 +13,9 @@ import plotly.graph_objects as go
 load_dotenv()
 
 app = Flask(__name__)
+
+# Configure caching
+cache = Cache(app, config={'CACHE_TYPE': 'simple'})
 
 FINNHUB_API_KEY = os.getenv('FINNHUB_API_KEY')
 
@@ -180,6 +184,7 @@ def get_technical_indicators(symbol):
     return stock_data
 
 
+@cache.memoize(timeout=1200)   # Cache for 20 minutes
 def fetch_stock_data(symbol):
     # Fetch data from Finnhub API
     quote_response = requests.get(f'https://finnhub.io/api/v1/quote?symbol={symbol}&token={FINNHUB_API_KEY}')
