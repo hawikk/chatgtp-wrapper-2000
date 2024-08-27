@@ -8,6 +8,84 @@ import plotly.io as pio
 # Flask app setup
 app = Flask(__name__)
 
+# Get recommendations based on technical indicators
+def get_recommendations(row):
+    recommendations = []
+
+    # RSI Recommendation
+    rsi = row['RSI_14']
+    if rsi < 20:
+        recommendations.append('Strong Buy')
+    elif rsi < 40:
+        recommendations.append('Buy')
+    elif rsi < 60:
+        recommendations.append('Hold')
+    elif rsi < 80:
+        recommendations.append('Sell')
+    else:
+        recommendations.append('Strong Sell')
+    
+    # Moving Average (SMA and EMA) Recommendation
+    price = row['Adj Close']
+    sma = row['SMA_20']
+    ema = row['EMA_50']
+    if price > sma and sma > ema:
+        recommendations.append('Strong Buy')
+    elif price > sma:
+        recommendations.append('Buy')
+    elif price > ema:
+        recommendations.append('Hold')
+    elif price < sma:
+        recommendations.append('Sell')
+    else:
+        recommendations.append('Strong Sell')
+    
+    # MACD Recommendation
+    macd = row['MACD_12_26_9']
+    signal = row['MACDs_12_26_9']
+    hist = row['MACDh_12_26_9']
+    if macd > signal and hist > 0:
+        recommendations.append('Strong Buy' if hist > 0.5 else 'Buy')
+    elif macd < signal and hist < 0:
+        recommendations.append('Strong Sell' if hist < -0.5 else 'Sell')
+    else:
+        recommendations.append('Hold')
+    
+    # Stochastic Oscillator Recommendation
+    stoch_k = row['STOCHk_14_3_3']
+    stoch_d = row['STOCHd_14_3_3']
+    if stoch_k > stoch_d and stoch_k < 20:
+        recommendations.append('Strong Buy')
+    elif stoch_k > stoch_d:
+        recommendations.append('Buy')
+    elif stoch_k < stoch_d and stoch_k > 80:
+        recommendations.append('Strong Sell')
+    elif stoch_k < stoch_d:
+        recommendations.append('Sell')
+    else:
+        recommendations.append('Hold')
+    
+    # ADX Recommendation
+    adx = row['ADX_14']
+    di_plus = row['DMP_14']
+    di_minus = row['DMN_14']
+    if di_plus > di_minus and adx > 25:
+        recommendations.append('Strong Buy')
+    elif di_plus > di_minus and adx > 20:
+        recommendations.append('Buy')
+    elif adx < 20:
+        recommendations.append('Hold')
+    elif di_minus > di_plus and adx > 20:
+        recommendations.append('Sell')
+    else:
+        recommendations.append('Strong Sell')
+    
+    # Aggregate recommendations into an overall score
+    score = recommendations.count('Strong Buy') * 2 + recommendations.count('Buy') - recommendations.count('Sell') - recommendations.count('Strong Sell') * 2
+    
+    return score
+
+
 # Function to fetch and process stock data
 def fetch_and_process_data(symbol):
     # Fetch stock data with weekly intervals
@@ -33,21 +111,23 @@ def fetch_and_process_data(symbol):
     stock_data['OBV_in_million'] = stock_data['OBV'] / 1e7
     stock_data['MACD_histogram_12_26_9'] = stock_data['MACDh_12_26_9']  # Rename for clarity
     
-    # Summarize technical indicators for the last week
-    last_week_summary = stock_data.iloc[-1][[
+    # Iterate through each row and generate a recommendation
+    stock_data['Recommendation'] = stock_data.apply(get_recommendations, axis=1)
+    
+    # Drop any rows that contain NaN values in the relevant columns
+    stock_data.dropna(subset=[
         'Adj Close', 'MACD_12_26_9', 'MACD_histogram_12_26_9', 'RSI_14',
-        'BBL_5_2.0', 'BBM_5_2.0', 'BBU_5_2.0', 'SMA_20', 'EMA_50',
-        'OBV_in_million', 'STOCHk_14_3_3', 'STOCHd_14_3_3', 'ADX_14',
-        'WILLR_14', 'CMF_20', 'PSARl_0.02_0.2'
-    ]]
+        'SMA_20', 'EMA_50', 'STOCHk_14_3_3', 'STOCHd_14_3_3', 'ADX_14',
+        'DMP_14', 'DMN_14'
+    ], inplace=True)
+    
+    # Summarize the last week's recommendation
+    last_week_indicators = stock_data.iloc[-1]
 
-    # Only include indicators that are not NaN
-    last_week_summary = last_week_summary.dropna()
-
-    return stock_data, last_week_summary
+    return last_week_indicators
 
 # Function to create Plotly chart
-def create_plotly_chart(stock_data, symbol):
+""" def create_plotly_chart(stock_data, symbol):
     fig = go.Figure()
 
     # Add adjusted close price line
@@ -69,7 +149,7 @@ def create_plotly_chart(stock_data, symbol):
         legend=dict(x=0.01, y=0.99)
     )
 
-    return fig
+    return fig 
 
 # Flask route to display the chart
 @app.route('/')
@@ -84,4 +164,4 @@ def index():
     return render_template('test.html', chart_div=chart_div, last_week_summary=last_week_summary)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True) """
