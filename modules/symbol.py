@@ -1,12 +1,14 @@
-from utils.core_financials import fetch_stock_data, calculate_income_growth
-from utils.technical_indicators import get_technical_indicators, get_recommendations
+import os
 
 from dotenv import load_dotenv
-import os
+
+from utils.core_financials import fetch_stock_data, calculate_income_growth
+from utils.technical_indicators import get_technical_indicators, get_recommendations
 
 load_dotenv()
 
 FINNHUB_API_KEY = os.getenv('FINNHUB_API_KEY')
+
 
 class Symbol():
     def __init__(self, symbol):
@@ -15,16 +17,16 @@ class Symbol():
         data = fetch_stock_data(symbol, FINNHUB_API_KEY)  # Pass the API key
         self.company_name = data['profile']['name']
         self.logo = data['profile']['logo']
-        
+
         self.technical_indicators = get_technical_indicators(symbol)
 
         # Refactor financial metrics into a dictionary
         self.financial_metrics = {
             # Price Data
-            'price_change_percentage' : data['quote']['dp'],
-            'current_price' : data['quote']['c'],
+            'price_change_percentage': data['quote']['dp'],
+            'current_price': data['quote']['c'],
             'market_cap': data['profile']['marketCapitalization'],
-            'previous_close' : data['quote']['pc'],
+            'previous_close': data['quote']['pc'],
             'TI_recommendations': get_recommendations(self.technical_indicators.iloc[-1]),
 
             # Fundamentals

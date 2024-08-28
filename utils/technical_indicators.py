@@ -1,6 +1,5 @@
 import yfinance as yf
-import pandas as pd
-import pandas_ta as ta
+
 
 def get_recommendations(row):
     recommendations = []
@@ -17,7 +16,7 @@ def get_recommendations(row):
         recommendations.append('Sell')
     else:
         recommendations.append('Strong Sell')
-    
+
     # Moving Average (SMA and EMA) Recommendation
     price = row['Adj Close']
     sma = row['SMA_20']
@@ -32,7 +31,7 @@ def get_recommendations(row):
         recommendations.append('Sell')
     else:
         recommendations.append('Strong Sell')
-    
+
     # MACD Recommendation
     macd = row['MACD_12_26_9']
     signal = row['MACDs_12_26_9']
@@ -43,7 +42,7 @@ def get_recommendations(row):
         recommendations.append('Strong Sell' if hist < -0.5 else 'Sell')
     else:
         recommendations.append('Hold')
-    
+
     # Stochastic Oscillator Recommendation
     stoch_k = row['STOCHk_14_3_3']
     stoch_d = row['STOCHd_14_3_3']
@@ -57,7 +56,7 @@ def get_recommendations(row):
         recommendations.append('Sell')
     else:
         recommendations.append('Hold')
-    
+
     # ADX Recommendation
     adx = row['ADX_14']
     di_plus = row['DMP_14']
@@ -72,10 +71,11 @@ def get_recommendations(row):
         recommendations.append('Sell')
     else:
         recommendations.append('Strong Sell')
-    
+
     # Aggregate recommendations into an overall score
-    score = recommendations.count('Strong Buy') * 2 + recommendations.count('Buy') - recommendations.count('Sell') - recommendations.count('Strong Sell') * 2
-    
+    score = recommendations.count('Strong Buy') * 2 + recommendations.count('Buy') - recommendations.count(
+        'Sell') - recommendations.count('Strong Sell') * 2
+
     return score
 
 
@@ -83,10 +83,10 @@ def get_recommendations(row):
 def get_technical_indicators(symbol):
     # Fetch stock data with weekly intervals
     stock_data = yf.download(symbol, period='1y', interval='1wk')
-    
+
     # Ensure that no NaN values exist in the close price before calculations
     stock_data['Close'].fillna(method='ffill', inplace=True)
-    
+
     # Calculate technical indicators using pandas-ta
     stock_data.ta.macd(append=True)
     stock_data.ta.rsi(append=True)
@@ -99,12 +99,11 @@ def get_technical_indicators(symbol):
     stock_data.ta.willr(append=True)
     stock_data.ta.cmf(append=True)
     stock_data.ta.psar(append=True)
-    
+
     # Convert OBV to millions
     stock_data['OBV_in_million'] = stock_data['OBV'] / 1e7
     stock_data['MACD_histogram_12_26_9'] = stock_data['MACDh_12_26_9']  # Rename for clarity
-    
-    #last_week_indicators = stock_data.iloc[-1]
+
+    # last_week_indicators = stock_data.iloc[-1]
 
     return stock_data
-
