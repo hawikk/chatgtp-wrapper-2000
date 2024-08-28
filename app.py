@@ -260,7 +260,8 @@ def create_gauge_chart(score):
     fig.update_traces(delta={'reference': 0}, number={'font': {'size': 20}})
 
     # Return the HTML representation of the figure
-    return fig.to_html(full_html=False)
+    # return fig.to_html(full_html=False)
+    return score
 
 if __name__ == '__main__':
     app.run(debug=True)
