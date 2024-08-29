@@ -5,3 +5,4 @@ config.yaml
 app.log
 .idea/
 .venv
+__pycache__
