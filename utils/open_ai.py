@@ -1,4 +1,5 @@
 from openai import OpenAI
+from cache_config import cache
 
 def generate_ai_summary(news_data):
     client = OpenAI()

@@ -1,4 +1,5 @@
 import requests
+from cache_config import cache
 
 
 # Remove standalone cache initialization
