@@ -168,42 +168,14 @@ button .text {
     align-items: center;
 }
 
-@keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
-}
-
-.pulse {
-    animation: pulse 0.3s ease-in-out;
-}
-
-
 .card-overview {
     display: none;
-    background-color: #f0f0f0;
-    padding: 20px;
+    width: 100%;
     margin-top: 10px;
-    border-radius: 5px;
 }
 
 .overview-content {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-}
-
-.chart-container, .news-container, .other-metrics, .ai-summary {
-    background-color: white;
     padding: 15px;
+    background-color: #f0f0f0;
     border-radius: 5px;
-}
-
-.chart-container {
-    grid-column: 1 / -1;
-}
-
-.chart-container img {
-    width: 100%;
-    height: auto;
 }
