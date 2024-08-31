@@ -1,9 +1,7 @@
 import requests
 
 
-# Remove standalone cache initialization
-# cache = Cache(config={'CACHE_TYPE': 'simple'})
-
+# todo: add more robust report search
 def calculate_income_growth(financial_reports):
     try:
         for item in financial_reports['data'][0]['report']['ic']:
