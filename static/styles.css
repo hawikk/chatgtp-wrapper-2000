@@ -25,6 +25,7 @@ h1 {
     width: 400px;  /* Increased width for a more square shape */
     transition: transform 0.2s;
     overflow: hidden;  /* Ensure content does not spill out */
+    cursor: pointer;
 }
 
 .card:hover {
@@ -165,4 +166,44 @@ button .text {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.pulse {
+    animation: pulse 0.3s ease-in-out;
+}
+
+
+.card-overview {
+    display: none;
+    background-color: #f0f0f0;
+    padding: 20px;
+    margin-top: 10px;
+    border-radius: 5px;
+}
+
+.overview-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.chart-container, .news-container, .other-metrics, .ai-summary {
+    background-color: white;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.chart-container {
+    grid-column: 1 / -1;
+}
+
+.chart-container img {
+    width: 100%;
+    height: auto;
 }
