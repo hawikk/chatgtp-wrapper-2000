@@ -9,6 +9,7 @@
     <script src="{{ url_for('static', filename='gauge.js') }}"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="{{ url_for('static', filename='card-expand.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='lightbox.css') }}">
 </head>
 <body>
     <h1>Stock Data</h1>
@@ -48,20 +49,18 @@
             </div>
         </div>
         {% endfor %}
-        {% for symbol, data in stock_data.items() %}
-        <div class="card-overview" id="overview-{{ symbol }}">
-            <div class="overview-content">
-                <div class="news-container">
-                    <h3>News:</h3>
-                    <p>Loading news...</p>
-                </div>
-                <div class="ai-summary">
-                    <h3>AI Summary:</h3>
-                    <p>Loading AI summary...</p>
-                </div>
+    </div>
+
+    <!-- Lightbox container -->
+    <div id="lightbox" class="lightbox">
+        <div class="lightbox-content">
+            <span class="close">&times;</span>
+            <div id="lightbox-overview">
+                <!-- Content will be dynamically loaded here -->
             </div>
         </div>
-        {% endfor %}
     </div>
+
+    <script src="{{ url_for('static', filename='lightbox.js') }}"></script>
 </body>
 </html>

@@ -5,17 +5,20 @@ import requests
 # cache = Cache(config={'CACHE_TYPE': 'simple'})
 
 def calculate_income_growth(financial_reports):
-    for item in financial_reports['data'][0]['report']['ic']:
-        if item['concept'] == 'us-gaap_NetIncomeLoss':
-            last_quarter = item['value']
-            break
+    try:
+        for item in financial_reports['data'][0]['report']['ic']:
+            if item['concept'] == 'us-gaap_NetIncomeLoss':
+                last_quarter = item['value']
+                break
 
-    for item in financial_reports['data'][1]['report']['ic']:
-        if item['concept'] == 'us-gaap_NetIncomeLoss':
-            previous_quarter = item['value']
-            break
+        for item in financial_reports['data'][1]['report']['ic']:
+            if item['concept'] == 'us-gaap_NetIncomeLoss':
+                previous_quarter = item['value']
+                break
 
-    return ((last_quarter - previous_quarter) / previous_quarter) * 100
+        return ((last_quarter - previous_quarter) / previous_quarter) * 100
+    except IndexError as e:
+        return 0
 
 
 def fetch_stock_data(symbol, FINNHUB_API_KEY):

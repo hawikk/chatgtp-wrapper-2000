@@ -1,29 +1,28 @@
 $(document).ready(function() {
     $('.card').click(function() {
         var symbol = $(this).data('symbol');
-        var overview = $('#overview-' + symbol);
+        var overviewContent = $('#overview-' + symbol).html();
         
-        // Close other open overviews
-        $('.card-overview').not(overview).slideUp();
+        // Load the content into the lightbox
+        $('#lightbox-overview').html(overviewContent);
         
-        // Toggle the clicked card's overview
-        overview.slideToggle();
-
-        // If the overview is now visible, scroll to it
-        if (overview.is(':visible')) {
-            $('html, body').animate({
-                scrollTop: overview.offset().top - 20
-            }, 500);
-        }
-
-        // Simple animation to indicate the card was clicked
-        $(this).addClass('pulse');
-        setTimeout(() => {
-            $(this).removeClass('pulse');
-        }, 300);
+        // Display the lightbox
+        $('#lightbox').fadeIn();
 
         // Placeholder text update (replace with actual data fetching later)
-        overview.find('.news-container p').text('Latest news for ' + symbol + ' would appear here.');
-        overview.find('.ai-summary p').text('AI-generated summary for ' + symbol + ' would be displayed in this section.');
+        $('#lightbox-overview .news-container p').text('Latest news for ' + symbol + ' would appear here.');
+        $('#lightbox-overview .ai-summary p').text('AI-generated summary for ' + symbol + ' would be displayed in this section.');
+    });
+
+    // Close the lightbox when the close button is clicked
+    $('.close').click(function() {
+        $('#lightbox').fadeOut();
+    });
+
+    // Close the lightbox when clicking outside the content area
+    $(window).click(function(event) {
+        if ($(event.target).is('#lightbox')) {
+            $('#lightbox').fadeOut();
+        }
     });
 });
