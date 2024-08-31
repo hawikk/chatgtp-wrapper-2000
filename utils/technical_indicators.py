@@ -1,5 +1,4 @@
 import yfinance as yf
-import pandas as pd
 import pandas_ta as ta
 
 def get_recommendations(row):
