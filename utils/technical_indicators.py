@@ -1,6 +1,7 @@
 import yfinance as yf
 import pandas as pd
 import pandas_ta as ta
+from cache_config import cache
 
 def get_recommendations(row):
     recommendations = []
@@ -81,6 +82,7 @@ def get_recommendations(row):
 
 
 # Function to fetch and process stock data
+@cache.memoize(timeout=3600)  # Cache for 1 hour
 def get_technical_indicators(symbol):
     # Fetch stock data with weekly intervals
     stock_data = yf.download(symbol, period='1y', interval='1wk')

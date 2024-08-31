@@ -1,14 +1,31 @@
-from flask import Flask, render_template, request
-from flask_caching import Cache
+import os
+import sys
 
-# Import Symbol class
+# Set Python path to include the current directory
+sys.path.insert(0, os.path.dirname(__file__))
+
+# Disable writing bytecode (.pyc files)
+os.environ['PYTHONDONTWRITEBYTECODE'] = '1'
+sys.dont_write_bytecode = True
+
+from flask import Flask, render_template, request
 from modules.symbol import Symbol
+from cache_config import cache, init_cache
 
 app = Flask(__name__)
 
 # Configure caching
-cache = Cache(app, config={'CACHE_TYPE': 'simple'})
+cache_dir = os.path.join(app.root_path, 'cache')
+if not os.path.exists(cache_dir):
+    os.makedirs(cache_dir)
 
+cache_config = {
+    'CACHE_TYPE': 'FileSystemCache',
+    'CACHE_DIR': cache_dir,
+    'CACHE_DEFAULT_TIMEOUT': 300
+}
+app.config.from_mapping(cache_config)
+init_cache(app)
 
 @app.route('/')
 def index():
