@@ -21,7 +21,6 @@ class Symbol():
 
         self.technical_indicators = get_technical_indicators(symbol)
         self.financial_metrics = self.construct_financial_metrics(data)
-        self.news_summary = ""
 
     def construct_financial_metrics(self, data):
         return {
@@ -56,3 +55,5 @@ class Symbol():
             'beta': data['financials'].get('metric', {}).get('beta'),
             'focfCagr5Y': data['financials'].get('metric', {}).get('focfCagr5Y')
         }
+    def generate_stock_overview(self):
+        self.news_summary = generate_ai_news_summary(self.symbol, OPENAI_API_KEY, FINNHUB_API_KEY)
