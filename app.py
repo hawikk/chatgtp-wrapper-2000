@@ -1,16 +1,16 @@
 import os
 import sys
 
+from flask import Flask, render_template, request
+from modules.symbol import Symbol
+from cache_config import cache, init_cache
+
 # Set Python path to include the current directory
 sys.path.insert(0, os.path.dirname(__file__))
 
 # Disable writing bytecode (.pyc files)
 os.environ['PYTHONDONTWRITEBYTECODE'] = '1'
 sys.dont_write_bytecode = True
-
-from flask import Flask, render_template, request
-from modules.symbol import Symbol
-from cache_config import cache, init_cache
 
 app = Flask(__name__)
 
