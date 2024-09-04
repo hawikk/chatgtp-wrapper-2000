@@ -27,6 +27,7 @@ cache_config = {
 app.config.from_mapping(cache_config)
 init_cache(app)
 
+
 @app.route('/')
 def index():
     return render_template('index.html')

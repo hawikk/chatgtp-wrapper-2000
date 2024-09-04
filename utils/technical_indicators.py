@@ -3,6 +3,7 @@ import pandas as pd
 import pandas_ta as ta
 from cache_config import cache
 
+
 def get_recommendations(row):
     recommendations = []
 
