@@ -40,6 +40,9 @@ def submit():
     # Generate gauge charts for each symbol
     gauge_charts = {symbol: stock_data[symbol].financial_metrics['TI_recommendations'] for symbol in stock_data}
 
+    for symbol_obj in stock_data.values():
+        symbol_obj.generate_stock_overview()
+
     return render_template('results.html', stock_data=stock_data, gauge_charts=gauge_charts)
 
 

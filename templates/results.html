@@ -8,6 +8,7 @@
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="{{ url_for('static', filename='gauge.js') }}"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="{{ url_for('static', filename='card-expand.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='lightbox.css') }}">
 </head>
@@ -15,7 +16,9 @@
     <h1>Stock Data</h1>
     <div class="card-grid">
         {% for symbol, data in stock_data.items() %}
-        <div class="card" data-symbol="{{ symbol }}">
+        <div class="card" data-symbol="{{ symbol }}" 
+             data-news-summary="{{ data.news_summary | tojson | safe }}"
+             data-stock-analysis="{{ data.stock_analysis | safe }}">
             <div class="card-header">
                 <img src="{{ data.logo }}" alt="{{ symbol }} logo" style="width: 50px; height: 50px;">
                 <h2>
@@ -55,8 +58,16 @@
     <div id="lightbox" class="lightbox">
         <div class="lightbox-content">
             <span class="close">&times;</span>
-            <div id="lightbox-overview">
-                <!-- Content will be dynamically loaded here -->
+            <h2>Stock Information for <span id="stock-symbol"></span></h2>
+            <div class="lightbox-sections">
+                <div class="lightbox-section">
+                    <h3>AI Stock Analysis</h3>
+                    <ul id="news-list"></ul>
+                </div>
+                <div class="lightbox-section">
+                    <h3>Latest news</h3>
+                    <div id="ai-analysis"></div>
+                </div>
             </div>
         </div>
     </div>

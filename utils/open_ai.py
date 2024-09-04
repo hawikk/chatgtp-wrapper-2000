@@ -14,7 +14,13 @@ def generate_ai_news_summary(symbol, OPENAI_API_KEY, FINNHUB_API_KEY):
         max_tokens=10000
     )
 
-    return response.choices[0].message.content
+    news_summary = response.choices[0].message.content
+    ai_analysis = "AI Analysis: " + response.choices[0].message.content
+
+    return {
+        'news': news_summary,
+        'analysis': ai_analysis
+    }
 
 def generate_ai_recommendation(stock_data, OPENAI_API_KEY):
     client = OpenAI(api_key=OPENAI_API_KEY)
@@ -29,7 +35,7 @@ def generate_ai_recommendation(stock_data, OPENAI_API_KEY):
             {"role": "system", "content": "You are a helpful assistant that generates investment recommendations based on stock data."},
             {"role": "user", "content": combined_data}
         ],
-        max_tokens=100
+        max_tokens=250
     )
 
     return response.choices[0].message.content

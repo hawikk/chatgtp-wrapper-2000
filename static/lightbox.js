@@ -1,28 +1,30 @@
 $(document).ready(function() {
-    var useMarked = typeof marked !== 'undefined';
-
     $('.card').click(function() {
         var symbol = $(this).data('symbol');
         var newsSummary = $(this).data('news-summary');
         var stockAnalysis = $(this).data('stock-analysis');
         
-        // Update stock symbol
-        $('#stock-symbol').text(symbol);
+        console.log('Symbol:', symbol);
+        console.log('News Summary:', newsSummary);
+        console.log('Stock Analysis:', stockAnalysis);
         
         // Populate news list
         var $newsList = $('#news-list').empty();
         if (Array.isArray(newsSummary)) {
             newsSummary.forEach(function(news, index) {
-                var newsItem = useMarked ? marked.parse(`${index + 1}. ${news}`) : `${index + 1}. ${news}`;
-                $newsList.append($('<li>').html(newsItem));
+                $newsList.append($('<li>').text(`${index + 1}. ${news}`));
             });
+        } else if (typeof newsSummary === 'string') {
+            $newsList.append($('<li>').text(newsSummary));
         } else {
             $newsList.append($('<li>').text("No news available"));
         }
         
         // Populate AI analysis
-        var analysisContent = useMarked ? marked.parse(stockAnalysis || "No analysis available") : (stockAnalysis || "No analysis available");
-        $('#ai-analysis').html(analysisContent);
+        $('#ai-analysis').text(stockAnalysis || "No analysis available");
+        
+        // Update the stock symbol in the lightbox
+        $('#stock-symbol').text(symbol);
         
         // Display the lightbox
         $('#lightbox').fadeIn();

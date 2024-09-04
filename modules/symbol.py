@@ -56,4 +56,6 @@ class Symbol():
             'focfCagr5Y': data['financials'].get('metric', {}).get('focfCagr5Y')
         }
     def generate_stock_overview(self):
-        self.news_summary = generate_ai_news_summary(self.symbol, OPENAI_API_KEY, FINNHUB_API_KEY)
+        ai_response = generate_ai_news_summary(self.symbol, OPENAI_API_KEY, FINNHUB_API_KEY)
+        self.news_summary = ai_response['news']
+        self.stock_analysis = ai_response['analysis']
