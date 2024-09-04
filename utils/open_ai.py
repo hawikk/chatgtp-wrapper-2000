@@ -39,7 +39,7 @@ def generate_ai_recommendation(stock_data, OPENAI_API_KEY):
              "content": "You are a helpful assistant that generates investment recommendations based on stock data."},
             {"role": "user", "content": combined_data}
         ],
-        max_tokens=250
+        max_tokens=500
     )
 
     return response.choices[0].message.content
