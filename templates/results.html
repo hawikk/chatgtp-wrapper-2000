@@ -17,8 +17,8 @@
     <div class="card-grid">
         {% for symbol, data in stock_data.items() %}
         <div class="card" data-symbol="{{ symbol }}" 
-             data-news-summary="{{ data.news_summary | tojson | safe }}"
-             data-stock-analysis="{{ data.stock_analysis | safe }}">
+             data-news-summary="{{ data.news_summary | safe }}"
+             data-stock-analysis="TODO">
             <div class="card-header">
                 <img src="{{ data.logo }}" alt="{{ symbol }} logo" style="width: 50px; height: 50px;">
                 <h2>
@@ -61,11 +61,11 @@
             <h2>Stock Information for <span id="stock-symbol"></span></h2>
             <div class="lightbox-sections">
                 <div class="lightbox-section">
-                    <h3>AI Stock Analysis</h3>
+                    <h3>Last Week News Summary: </h3>
                     <ul id="news-list"></ul>
                 </div>
                 <div class="lightbox-section">
-                    <h3>Latest news</h3>
+                    <h3>Assistant Recommendation: </h3>
                     <div id="ai-analysis"></div>
                 </div>
             </div>

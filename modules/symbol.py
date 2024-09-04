@@ -58,6 +58,5 @@ class Symbol():
         }
 
     def generate_stock_overview(self):
-        ai_response = generate_ai_news_summary(self.symbol, OPENAI_API_KEY, FINNHUB_API_KEY)
-        self.news_summary = ai_response['news']
-        self.stock_analysis = ai_response['analysis']
+        self.news_summary = generate_ai_news_summary(self.symbol, OPENAI_API_KEY, FINNHUB_API_KEY)
+        # self.stock_analysis = 
