@@ -22,17 +22,15 @@ class Symbol():
 
         self.technical_indicators = get_technical_indicators(symbol)
         self.financial_metrics = self.construct_financial_metrics(data)
+        self.news_summary = None  # Initialize news_summary
 
     def construct_financial_metrics(self, data):
         return {
-            # Price Data
             'price_change_percentage': data['quote']['dp'],
             'current_price': data['quote']['c'],
             'market_cap': data['profile']['marketCapitalization'],
             'previous_close': data['quote']['pc'],
             'TI_recommendations': get_recommendations(self.technical_indicators.iloc[-1]),
-
-            # Fundamentals
             'netIncomeGrowthQuarterly': calculate_income_growth(data['financials_reports']),
             'peBasicExclExtraTTM': data['financials'].get('metric', {}).get('peBasicExclExtraTTM'),
             'pbAnnual': data['financials'].get('metric', {}).get('pbAnnual'),
@@ -59,4 +57,3 @@ class Symbol():
 
     def generate_stock_overview(self):
         self.news_summary = generate_ai_news_summary(self.symbol, OPENAI_API_KEY, FINNHUB_API_KEY)
-        # self.stock_analysis = 
