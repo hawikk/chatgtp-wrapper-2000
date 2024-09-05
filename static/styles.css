@@ -10,6 +10,42 @@ h1 {
     color: #ffffff;
 }
 
+.top-bar {
+    background-color: rgb(40, 44, 45);
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    margin-bottom: 20px;
+}
+
+.top-bar form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.top-bar input[type="text"] {
+    padding: 10px;
+    width: 300px;
+    border: 1px solid #444;
+    border-radius: 5px 0 0 5px;
+    background-color: rgb(50, 54, 55);
+    color: #fff;
+}
+
+.top-bar button {
+    padding: 10px 20px;
+    background-color: #0173ff;
+    color: white;
+    border: none;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.top-bar button:hover {
+    background-color: #0056b3;
+}
+
 .card-grid {
     display: flex;
     flex-wrap: wrap;
@@ -84,74 +120,6 @@ h1 {
     color: red;
 }
 
-form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-input[type="text"] {
-    padding: 10px;
-    width: 300px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin-bottom: 10px;
-}
-
-@property --rotate {
-    syntax: "<angle>";
-    inherits: false;
-    initial-value: 0deg;
-}
-
-button {
-    --blue: #0173ff;
-    --radius: 35px;
-    --rotate: 0deg;
-    padding: 20px 30px;
-    border-radius: var(--radius);
-    background: var(--blue);
-    color: white;
-    font-weight: 300;
-    font-size: 20px;
-    border: 0;
-    position: relative;
-    overflow: hidden;
-    cursor: pointer;
-}
-
-button .fancy {
-    position: absolute;
-    inset: 0;
-}
-
-button .fancy::before {
-    content: '';
-    background: conic-gradient(from var(--rotate), transparent 0%, white 5%, transparent 10%);
-    position: absolute;
-    inset: 0;
-    animation: rotate 2s linear infinite;
-}
-
-button .fancy::after {
-    content: "";
-    position: absolute;
-    inset: 2px;
-    background: var(--blue);
-    border-radius: calc(var(--radius) - 2px);
-}
-
-button .text {
-    position: relative;
-}
-
-@keyframes rotate {
-    to {
-        --rotate: 360deg;
-    }
-}
-
 .gauge-container {
     display: flex;
     flex-direction: column;
@@ -180,38 +148,3 @@ button .text {
     border-radius: 5px;
 }
 
-.lightbox {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.8);
-}
-
-.lightbox-content {
-    background-color: #fefefe;
-    margin: 15% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-    max-width: 600px;
-    position: relative;
-}
-
-.close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
-}

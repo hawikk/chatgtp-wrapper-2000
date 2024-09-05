@@ -11,11 +11,12 @@ load_dotenv()
 FINNHUB_API_KEY = os.getenv('FINNHUB_API_KEY')
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 
+
 class Symbol():
     def __init__(self, symbol):
         self.symbol = symbol
 
-        data = fetch_stock_data(symbol, FINNHUB_API_KEY)  # Pass the API key
+        data = fetch_stock_data(symbol, FINNHUB_API_KEY)
         self.company_name = data['profile']['name']
         self.logo = data['profile']['logo']
 
@@ -55,5 +56,7 @@ class Symbol():
             'beta': data['financials'].get('metric', {}).get('beta'),
             'focfCagr5Y': data['financials'].get('metric', {}).get('focfCagr5Y')
         }
+
     def generate_stock_overview(self):
         self.news_summary = generate_ai_news_summary(self.symbol, OPENAI_API_KEY, FINNHUB_API_KEY)
+        # self.stock_analysis = 
