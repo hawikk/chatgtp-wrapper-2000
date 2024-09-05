@@ -3,29 +3,42 @@ $(document).ready(function() {
 
     $('.card').click(function() {
         var symbol = $(this).data('symbol');
-        var newsSummary = $(this).data('news-summary');
-        var stockAnalysis = $(this).data('stock-analysis');
         
         // Update stock symbol
         $('#stock-symbol').text(symbol);
         
-        // Populate news list
-        var $newsList = $('#news-list').empty();
-        if (Array.isArray(newsSummary)) {
-            newsSummary.forEach(function(news, index) {
-                var newsItem = useMarked ? marked.parse(`${index + 1}. ${news}`) : `${index + 1}. ${news}`;
-                $newsList.append($('<li>').html(newsItem));
-            });
-        } else {
-            $newsList.append($('<li>').text("No news available"));
-        }
-        
-        // Populate AI analysis
-        var analysisContent = useMarked ? marked.parse(stockAnalysis || "No analysis available") : (stockAnalysis || "No analysis available");
-        $('#ai-analysis').html(analysisContent);
-        
-        // Display the lightbox
-        $('#lightbox').fadeIn();
+        // Make AJAX call to generate stock overview
+        $.ajax({
+            url: '/generate_overview',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ symbol: symbol }),
+            success: function(response) {
+                var newsSummary = response.news_summary;
+                var stockAnalysis = "TODO"; // Placeholder for future analysis data
+                
+                // Populate news list
+                var $newsList = $('#news-list').empty();
+                if (Array.isArray(newsSummary) && newsSummary.length > 0) {
+                    newsSummary.forEach(function(news, index) {
+                        var newsItem = useMarked ? marked.parse(`${index + 1}. ${news}`) : `${index + 1}. ${news}`;
+                        $newsList.append($('<li>').html(newsItem));
+                    });
+                } else {
+                    $newsList.append($('<li>').text("No news available"));
+                }
+                
+                // Populate AI analysis
+                var analysisContent = useMarked ? marked.parse(stockAnalysis || "No analysis available") : (stockAnalysis || "No analysis available");
+                $('#ai-analysis').html(analysisContent);
+                
+                // Display the lightbox
+                $('#lightbox').fadeIn();
+            },
+            error: function() {
+                alert('Failed to generate stock overview');
+            }
+        });
     });
 
     // Close the lightbox when the close button is clicked
