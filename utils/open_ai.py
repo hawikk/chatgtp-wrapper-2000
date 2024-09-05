@@ -1,10 +1,9 @@
 from openai import OpenAI
-from cache_config import cache
 from utils.news_collector import collect_news
 
 
 def generate_ai_news_summary(symbol, OPENAI_API_KEY, FINNHUB_API_KEY):
-    """     news_data = collect_news(symbol, FINNHUB_API_KEY)
+    news_data = collect_news(symbol, FINNHUB_API_KEY)
     client = OpenAI(api_key=OPENAI_API_KEY)
     response = client.chat.completions.create(
         model="gpt-4o-mini",
@@ -14,11 +13,9 @@ def generate_ai_news_summary(symbol, OPENAI_API_KEY, FINNHUB_API_KEY):
             {"role": "user", "content": f"Here is the news data: {news_data}"}
         ],
         max_tokens=10000
-    ) """
-    
-    return "Stock News Summary : blablabla"
+    )
 
-    # return response.choices[0].message.content
+    return response.choices[0].message.content
 
 
 def generate_ai_recommendation(stock_data, OPENAI_API_KEY):

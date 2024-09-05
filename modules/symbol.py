@@ -16,7 +16,7 @@ class Symbol():
     def __init__(self, symbol):
         self.symbol = symbol
 
-        data = fetch_stock_data(symbol, FINNHUB_API_KEY)  # Pass the API key
+        data = fetch_stock_data(symbol, FINNHUB_API_KEY)
         self.company_name = data['profile']['name']
         self.logo = data['profile']['logo']
 

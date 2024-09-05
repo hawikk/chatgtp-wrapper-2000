@@ -1,6 +1,4 @@
 import requests
-from cache_config import cache
-
 
 # todo: add more robust report search
 def calculate_income_growth(financial_reports):

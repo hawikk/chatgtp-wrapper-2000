@@ -7,15 +7,13 @@ def collect_news(symbol, FINNHUB_API_KEY):
     Collect news for a given symbol from the last week.
     returns: list of strings with news summaries (~5K words)
     """
-    # Calculate the date range
     today = datetime.datetime.now()
     last_week = today - datetime.timedelta(days=7)
 
-    # Format dates in YYYY-MM-DD
     today_str = today.strftime('%Y-%m-%d')
     last_week_str = last_week.strftime('%Y-%m-%d')
 
-    # Fetch data from Finnhub API
+    # Fetch news from Finnhub API
     news_response = requests.get(
         f'https://finnhub.io/api/v1/company-news?symbol={symbol}&from={last_week_str}&to={today_str}&token={FINNHUB_API_KEY}')
     news_list = news_response.json()
