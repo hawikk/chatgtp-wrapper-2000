@@ -1,7 +1,9 @@
 from openai import OpenAI
 from utils.news_collector import collect_news
+from cache_setup import cache
 
 
+@cache.memoize()
 def generate_ai_news_summary(symbol, OPENAI_API_KEY, FINNHUB_API_KEY):
     news_data = collect_news(symbol, FINNHUB_API_KEY)
     client = OpenAI(api_key=OPENAI_API_KEY)

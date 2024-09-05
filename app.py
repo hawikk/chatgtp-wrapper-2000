@@ -1,17 +1,6 @@
-import os
-import sys
-
-from flask import Flask, render_template, request, redirect, url_for
+from cache_setup import app, cache
+from flask import render_template, request
 from modules.symbol import Symbol
-
-# Set Python path to include the current directory
-sys.path.insert(0, os.path.dirname(__file__))
-
-# Disable writing bytecode (.pyc files)
-os.environ['PYTHONDONTWRITEBYTECODE'] = '1'
-sys.dont_write_bytecode = True
-
-app = Flask(__name__)
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
@@ -28,6 +17,7 @@ def home():
     else:
         # For GET requests, just show an empty home page
         return render_template('home.html', stock_data={}, gauge_charts={})
+
 
 if __name__ == '__main__':
     app.run(debug=True)
